@@ -1,0 +1,24 @@
+{
+	"contentrating" : "Everyone",
+	"description" : "Das ist cool",
+	"file" : "CodeTime.html",
+	"general" : 
+	{
+		"properties" : 
+		{
+			"schemecolor" : 
+			{
+				"order" : 0,
+				"text" : "ui_browse_properties_scheme_color",
+				"type" : "color",
+				"value" : "0 0 0"
+			}
+		}
+	},
+	"ratingsex" : "none",
+	"ratingviolence" : "none",
+	"tags" : [ "Technology" ],
+	"title" : "CodeTime",
+	"type" : "Web",
+	"version" : 0
+}

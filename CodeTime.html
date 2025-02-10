@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Clock</title>
+    <style>
+        :root {
+            --font-size: 25.2px;
+            --gap: 56px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #000000;
+            color: #d4d4d4;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: var(--font-size);
+            line-height: 1.5;
+            transition: background 0.5s, color 0.5s;
+        }
+
+        #time {
+            color: green;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            gap: var(--gap);
+        }
+
+        .code { color: #569cd6; }
+        .number { color: #dcdcaa; }
+        .string { color: #ce9178; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <pre id="code"></pre>
+    </div>
+
+    <script>
+        const greetings = [
+            [0, "Good night"],
+            [5, "Good morning"],
+            [10, "Good day"],
+            [14, "Good afternoon"],
+            [18, "Good evening"],
+            [22, "Good night"]
+        ];
+
+        function getGreeting(hour) {
+            return greetings.reduce((acc, [time, message]) => (hour >= time ? message : acc), "Hello");
+        }
+
+        function getFormattedTime() {
+            const now = new Date();
+
+            const startOfDay = new Date(now);
+            startOfDay.setHours(0, 0, 0, 0);
+            const dayProgress = ((now - startOfDay) / 86400000) * 100;
+            return {
+                hours: String(now.getHours()).padStart(2, '0'),
+                minutes: String(now.getMinutes()).padStart(2, '0'),
+                seconds: String(now.getSeconds()).padStart(2, '0'),
+                year: now.getFullYear(),
+                month: String(now.getMonth() + 1).padStart(2, '0'),
+                day: String(now.getDate()).padStart(2, '0'),
+                dayOfWeek: now.toLocaleString('en', { weekday: 'long' }),
+                dayProgress: dayProgress,
+                yearProgress: ((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24 * (new Date(now.getFullYear(), 11, 31).getDate() === 31 ? 366 : 365))) * 100
+            };
+        }
+
+        function updateTime() {
+            const timeData = getFormattedTime();
+            const greetingMessage = getGreeting(parseInt(timeData.hours));
+            
+            const codeString = `
+<span class="code">Time</span> currentTime = {
+    <span class="code">message</span>: <span class="string">"${greetingMessage}"</span>,
+    <span class="code">date</span>: <span class="number">${timeData.day}/${timeData.month}/${timeData.year}</span>,
+    <span class="code">dayOfWeek</span>: <span class="string">"${timeData.dayOfWeek}"</span>,
+    <span class="code">time</span>: <span class="number" id="time">${timeData.hours}:${timeData.minutes}:${timeData.seconds}</span>,
+    <span class="code">dayProgress</span>: <span class="number">${timeData.dayProgress.toFixed(3)}%</span>,
+    <span class="code">yearProgress</span>: <span class="number">${timeData.yearProgress.toFixed(2)}%</span>
+};
+            `;
+
+            document.getElementById('code').innerHTML = codeString;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html>
